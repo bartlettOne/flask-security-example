@@ -7,6 +7,7 @@ db = SQLAlchemy()
 security = Security()
 mail = Mail()
 
+
 # Create app
 def create_app():
     myapp = Flask(__name__)
@@ -38,8 +39,8 @@ def create_app():
     from app.models import User, Role
     from app.forms import ExtendedRegisterForm
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security.init_app(myapp, user_datastore,
-         register_form=ExtendedRegisterForm)
+    security.init_app(myapp, datastore=user_datastore,
+         register_form=ExtendedRegisterForm, confirm_register_form=ExtendedRegisterForm)
 
     from app.main import bp as main_bp
     myapp.register_blueprint(main_bp)
@@ -49,7 +50,19 @@ def create_app():
     app_context = myapp.app_context()
     app_context.push()
     db.create_all()
-    user_datastore.create_user(email='test@me.com', password='password')
+        # Create the Roles "admin" and "end-user" -- unless they already exist
+    user_datastore.find_or_create_role(name='admin', description='Administrator')
+    user_datastore.find_or_create_role(name='end-user', description='End user')
+    
+    user_datastore.create_user(email='someone@example.com', password='password')
+    user_datastore.create_user(email='admin@example.com', password='password')
+    
+    db.session.commit()
+
+    # Give one User has the "end-user" role, while the other has the "admin" role. (This will have no effect if the
+    # Users already have these Roles.) Again, commit any database changes.
+    user_datastore.add_role_to_user('someone@example.com', 'end-user')
+    user_datastore.add_role_to_user('admin@example.com', 'admin')
     db.session.commit()
 
     return myapp
