@@ -24,7 +24,7 @@ def create_app():
     myapp.config['SECURITY_PASSWORD_SALT'] = 'onetwothreefourfive'
 
     myapp.config['SECURITY_REGISTERABLE'] = True
-    myapp.config['SECURITY_CONFIRMABLE'] = True
+    myapp.config['SECURITY_CONFIRMABLE'] = False
     myapp.config['SECURITY_RECOVERABLE'] = True
     myapp.config['SECURITY_TRACKABLE'] = True
     myapp.config['SECURITY_CHANGEABLE'] = True
@@ -36,8 +36,10 @@ def create_app():
     mail.init_app(myapp)
 
     from app.models import User, Role
+    from app.forms import ExtendedRegisterForm
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security.init_app(myapp, user_datastore)
+    security.init_app(myapp, user_datastore,
+         register_form=ExtendedRegisterForm)
 
     from app.main import bp as main_bp
     myapp.register_blueprint(main_bp)
