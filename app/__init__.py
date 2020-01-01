@@ -3,11 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_mail import Mail
 from flask_security.signals import user_registered
+from flask_admin import Admin
 
 db = SQLAlchemy()
 security = Security()
 mail = Mail()
-
+db_admin = Admin(name="MyGolfLeague - Admin", template_mode='bootstrap3')
 
 # Create app
 def create_app():
@@ -36,6 +37,7 @@ def create_app():
 
     db.init_app(myapp)
     mail.init_app(myapp)
+    db_admin.init_app(myapp)
 
     from app.models import User, Role
     from app.forms import ExtendedRegisterForm
@@ -45,6 +47,9 @@ def create_app():
 
     from app.main import bp as main_bp
     myapp.register_blueprint(main_bp)
+
+    from app.db_admin import bp as db_admin_bp
+    myapp.register_blueprint(db_admin_bp)
 
 # This is junk. This should be in the security blueprint, but the "myapp" variable is not
 #   available there, so I had to register it here.

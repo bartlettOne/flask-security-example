@@ -5,6 +5,7 @@ blinker==1.4
 cffi==1.13.2
 Click==7.0
 Flask==1.1.1
+Flask-Admin==1.5.4
 Flask-BabelEx==0.9.3
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
