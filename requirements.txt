@@ -10,7 +10,7 @@ Flask-BabelEx==0.9.3
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
 Flask-Principal==0.4.0
-Flask-Security-Too==3.3.2
+Flask-Security-Too==3.4.5
 Flask-SQLAlchemy==2.4.1
 Flask-WTF==0.14.2
 isort==4.3.21
